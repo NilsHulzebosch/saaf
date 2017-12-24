@@ -15,6 +15,7 @@ DATA_DIR = "data"
 FILE_NAME = "data.p"
 COLUMNS = ["date","high","low","open","close","volume","quoteVolume","weightedAverage"]
 
+
 def timestamp_to_datetime(timestamp):
 	return datetime.datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d %H:%M:%S')
 
@@ -22,21 +23,23 @@ def datetime_to_timestamp(timestring): # Input string of the form '%Y-%m-%d %H:%
 	if len(timestring) <= 11:
 		return time.mktime(datetime.datetime.strptime(timestring, '%Y-%m-%d').timetuple())
 	else:
-		print('yes')
 		return time.mktime(datetime.datetime.strptime(timestring, '%Y-%m-%d %H:%M:%S').timetuple())	
 
+
+def fetch_data_to_pickle():
+	if not os.path.exists(DATA_DIR):
+		os.mkdir(DATA_DIR)
+
+	df = pd.read_json(FETCH_URL)
+
+	df.to_pickle(path=DATA_DIR+'/'+FILE_NAME, compression='infer')
+
+def df_from_pickle():
+	return pickle.load(open(DATA_DIR+'/'+FILE_NAME, "rb" ))
+
+
 def main():
-	# if not os.path.exists(DATA_DIR):
-	# 	os.mkdir(DATA_DIR)
-
-	# df = pd.read_json(FETCH_URL)
-
-	# df.to_pickle(path=DATA_DIR+'/'+FILE_NAME, compression='infer')
-	print('yes')
-
-	df = pickle.load(open(DATA_DIR+'/'+FILE_NAME, "rb" ))
-	print(' wat' )
-	print(df)
+	fetch_data_to_pickle()
 
 if __name__ == '__main__':
 	main()
