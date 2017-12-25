@@ -9,10 +9,9 @@ START_DATE = '1388534400'	# unix timestamp for 2014.01.01
 CANDLESTICK_PERIOD = '300'	# candlestick period in seconds; valid values are 300, 900, 1800, 7200, 14400, and 86400
 
 # URL to get API data:
-FETCH_URL = 'https://poloniex.com/public?command=returnChartData&currencyPair='+CURRENCY_PAIR+'&start='+START_DATE+'&period='+CANDLESTICK_PERIOD 
+FETCH_URL = 'https://poloniex.com/public?command=returnChartData&currencyPair='+\
+	CURRENCY_PAIR+'&start='+START_DATE+'&period='+CANDLESTICK_PERIOD 
 
-DATA_DIR = "data"
-FILE_NAME = "data.p"
 COLUMNS = ["date","high","low","open","close","volume","quoteVolume","weightedAverage"]
 
 
@@ -25,6 +24,9 @@ def datetime_to_timestamp(timestring): # Input string of the form '%Y-%m-%d %H:%
 	else:
 		return time.mktime(datetime.datetime.strptime(timestring, '%Y-%m-%d %H:%M:%S').timetuple())	
 
+DATA_DIR = 'data'
+FILE_NAME = 'data_'+CURRENCY_PAIR+'_start_'+str(timestamp_to_datetime(START_DATE))+\
+	'_period_'+CANDLESTICK_PERIOD+'_retrieved_'+str(datetime.datetime.now())
 
 def fetch_data_to_pickle():
 	if not os.path.exists(DATA_DIR):
@@ -34,8 +36,8 @@ def fetch_data_to_pickle():
 
 	df.to_pickle(path=DATA_DIR+'/'+FILE_NAME, compression='infer')
 
-def df_from_pickle():
-	return pickle.load(open(DATA_DIR+'/'+FILE_NAME, "rb" ))
+def df_from_pickle(filename):
+	return pickle.load(open(DATA_DIR+'/'+filename, "rb" ))
 
 
 def main():
