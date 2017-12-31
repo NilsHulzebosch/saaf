@@ -26,7 +26,7 @@ class Market_situation:
 FEE = 0.0025
 DELTA = 0.995
 DELTA_BUY = 2 - DELTA
-SLEEP = 0.2
+SLEEP = 0.5
 
 total_profit = 0.
 total_volume_profit = 0.
@@ -83,7 +83,7 @@ def sell(initial_price=0, print_trace=False):
 			print('H O D L')
 
 		else:
-			if current_price <= maximum_price*DELTA:# and profit > 0:
+			if current_price <= maximum_price*DELTA and profit > 0:
 				print('S O L D at  ', current_price)
 				print()
 				print(' --- S O L D --- ')
