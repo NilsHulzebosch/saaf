@@ -24,12 +24,14 @@ class Market_situation:
 
 
 FEE = 0.0025
-DELTA = 0.994
+DELTA = 0.995
+DELTA_BUY = 2 - DELTA
 SLEEP = 0.2
 
-trade_vol = 0.1
 total_profit = 0.
+total_volume_profit = 0.
 
+investment = 1000 # USDT
 
 def sell(initial_price=0, print_trace=False):
 
@@ -51,42 +53,52 @@ def sell(initial_price=0, print_trace=False):
 		if current_price >= maximum_price: # Set maximum
 			maximum_price = current_price
 
-		buy_value = buy_price*trade_vol + buy_price*trade_vol*FEE
+		buy_value = buy_price*trade_vol
 		sell_value = current_price*trade_vol - current_price*trade_vol*FEE
 		profit = sell_value - buy_value
+		volume_profit = trade_vol*profit / buy_value
 
 		if print_trace:
 			print('-------------------------')
-			print('Sell counter ', i)
-			print('Previous     ', previous_situation)
-			print('Current      ', current_price)
+			print('Sell counter      ', i)
+			print('Previous price    ', previous_situation)
+			print('Current price     ', current_price)
 			print()
-
-			print('Buy value    ', buy_value)
-			print('Sell value   ', sell_value)
-			print('Profit       ', profit)
+			print('Buy value         ', buy_value)
+			print('Sell value        ', sell_value)
+			print('Trade volume      ', trade_vol)
 			print()
-			print('Trade volume ', trade_vol)
-			print('Total_profit ', total_profit)
+			print('Profit            ', profit)
+			print('Volume profit     ', volume_profit)
+			print()
+			print('Total profit      ', total_profit)
+			print('Total vol profit  ', total_volume_profit)
 			print()
 
 		stack.append(current_price) 
 
 		if current_price >= previous_situation: # Increasing
+			print('Going to sell at  ', maximum_price*DELTA)
+			print()
 			print('H O D L')
 
 		else:
-			if current_price < maximum_price*DELTA:# and profit > 0:
-				print('curr       ', current_price)
-				print('max_d      ', maximum_price*DELTA)
-				print('max        ', maximum_price)
+			if current_price <= maximum_price*DELTA:# and profit > 0:
+				print('S O L D at  ', current_price)
 				print()
-				print(' --- S E L L --- ')
+				print(' --- S O L D --- ')
+
 				global total_profit
 				total_profit += profit
+
+				global total_volume_profit
+				total_volume_profit += volume_profit
+
 				return current_price
 			else:
-				print('Ooooh HODL')
+				print('Going to sell at  ', maximum_price*DELTA)
+				print()
+				print('Oooooooh hodl')
 		print()
 
 def buy(initial_price=0, print_trace=False):
@@ -104,7 +116,7 @@ def buy(initial_price=0, print_trace=False):
 
 		previous_situation = stack.pop()
 
-		if current_price <= minimum_price: # Set maximum
+		if current_price <= minimum_price: # Set minimum
 			minimum_price = current_price
 
 		new_trade_vol = trade_vol*initial_price / current_price
@@ -113,38 +125,47 @@ def buy(initial_price=0, print_trace=False):
 
 		if print_trace:
 			print('-------------------------')
-			print('Buy counter  ', i)
-			print('Previous     ', previous_situation)
-			print('Current      ', current_price)
+			print('Buy counter       ', i)
+			print('Previous price    ', previous_situation)
+			print('Current price     ', current_price)
 			print()
-
-			print('Buy value    ', buy_value)
+			print('Buy value         ', buy_value)
+			print('Curr trade volume ', trade_vol)
+			print('New trade volume  ', new_trade_vol)			
 			print()
-			print('Trade volume ', trade_vol)
-			print('Total_profit ', total_profit)
+			print('Total profit      ', total_profit)
+			print('Total vol profit  ', total_volume_profit)
 			print()
 
 		stack.append(current_price) 
 
 		if current_price <= previous_situation: # Increasing
+			print('Going to buy at   ', minimum_price*DELTA_BUY)
+			print()
 			print('N I K S')
 		else:
-			if current_price > minimum_price*DELTA:
-				print('curr       ', current_price)
-				print('min_d      ', minimum_price*DELTA)
-				print('min        ', minimum_price)
+			if current_price >= minimum_price*DELTA:
+				print('Bought at         ', current_price)
 				print()
 				print(' --- B U Y --- ')
 				global trade_vol
 				trade_vol = new_trade_vol
 				return current_price
 			else:
-				print('Ooooh niks')
+				print('Going to buy at   ', minimum_price*DELTA_BUY)
+				print()
+				print('Oooooh niks')
 		print()
 
 def main():
 	hist_df, ticker_df = hist_ticker()
 	buy_price = Market_situation(ticker_df=ticker_df, hist_df=hist_df).last
+
+	global init_trade_vol
+	init_trade_vol = investment / buy_price - FEE * investment / buy_price # initial trade volume
+
+	global trade_vol
+	trade_vol = init_trade_vol
 
 	while True:
 		sell_price = sell(initial_price=buy_price, print_trace=True)
