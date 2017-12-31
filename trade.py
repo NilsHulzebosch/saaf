@@ -30,8 +30,8 @@ def main():
 
 	stack = []
 
-	buy_price = 0
-	maximum_price = 0
+	buy_price = 0.
+	maximum_price = 0.
 
 	i = 0
 	while i < 10:
@@ -39,7 +39,6 @@ def main():
 		i += 1
 
 		hist_df, ticker_df = hist_ticker()
-
 
 		current_situation = Market_situation(ticker_df=ticker_df, hist_df=hist_df).last
 		total_fee = current_situation*FEE*TRADE_VOL
@@ -50,11 +49,11 @@ def main():
 		else:
 			buy_price = current_situation
 
-		print('-------------------------')
-
 		if current_situation >= maximum_price:
 			maximum_price = current_situation
 
+
+		print('-------------------------')
 		print('Previous   ', previous_situation)
 		print('Current    ', current_situation)
 		print()
@@ -70,14 +69,16 @@ def main():
 
 		stack.append(current_situation) 
 
-
 		if current_situation >= previous_situation: # Increasing
 			print('H O D L')
-		else:										# Decreasing
-			current_situation < maximum_price*DELTA
-			print('S E L L')
-		print()
+		else:
+			if current_situation < maximum_price*DELTA:
+				print('curr ', current_situation)
+				print('max_d', aximum_price*DELT)
+				print('max  ', maximum_price)
 
+				print('S E L L')
+		print()
 
 
 if __name__ == '__main__':
