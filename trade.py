@@ -22,11 +22,16 @@ class Market_situation:
 	def __repr__(self):
 		return str(self.ticker_df)
 
+
 FEE = 0.0025
 TRADE_VOL = 0.1
-DELTA = 0.96
+DELTA = 1#0.96
+SLEEP = 0.5
+total_profit = 0.
 
-def sell(initial_price=0):
+
+def sell(initial_price=0, print_trace=False):
+
 	stack = [initial_price]
 
 	buy_price = initial_price
@@ -34,7 +39,7 @@ def sell(initial_price=0):
 
 	i = 0
 	while True:
-		time.sleep(0.5)
+		time.sleep(SLEEP)
 		i += 1
 
 		hist_df, ticker_df = hist_ticker()
@@ -45,42 +50,49 @@ def sell(initial_price=0):
 		if current_price >= maximum_price: # Set maximum
 			maximum_price = current_price
 
-		print('-------------------------')
-		print('Previous   ', previous_situation)
-		print('Current    ', current_price)
-		print()
-
 		buy_value = buy_price*TRADE_VOL + buy_price*TRADE_VOL*FEE
 		sell_value = current_price*TRADE_VOL - current_price*TRADE_VOL*FEE
 		profit = sell_value - buy_value
 
-		print('Buy value  ', buy_value)
-		print('Sell value ', sell_value)
-		print('Profit     ', profit)
-		print()
+		if print_trace:
+			print('-------------------------')
+			print('Sell counter ', i)
+			print('Previous     ', previous_situation)
+			print('Current      ', current_price)
+			print()
+
+			print('Buy value    ', buy_value)
+			print('Sell value   ', sell_value)
+			print('Profit       ', profit)
+			print()
+			print('Total_profit ', total_profit)
+			print()
 
 		stack.append(current_price) 
 
 		if current_price >= previous_situation: # Increasing
 			print('H O D L')
+
 		else:
 			if current_price < maximum_price*DELTA:
 				print('curr ', current_price)
-				print('max_d', maximum_price*DELT)
+				print('max_d', maximum_price*DELTA)
 				print('max  ', maximum_price)
-
+				print()
 				print('S E L L')
+				global total_profit
+				total_profit += profit
 				return current_price
 		print()
 
-def buy(initial_price=0):
+def buy(initial_price=0, print_trace=False):
 	stack = [initial_price]
 
 	minimum_price = initial_price
 
 	i = 0
 	while True:
-		time.sleep(0.5)
+		time.sleep(SLEEP)
 		i += 1
 
 		hist_df, ticker_df = hist_ticker()
@@ -91,26 +103,30 @@ def buy(initial_price=0):
 		if current_price <= minimum_price: # Set maximum
 			minimum_price = current_price
 
-		print('-------------------------')
-		print('Previous   ', previous_situation)
-		print('Current    ', current_price)
-		print()
-
 		buy_value = current_price*TRADE_VOL - current_price*TRADE_VOL*FEE
 
-		print('Buy value  ', buy_value)
-		print()
+		if print_trace:
+			print('-------------------------')
+			print('Buy counter', i)
+			print('Previous   ', previous_situation)
+			print('Current    ', current_price)
+			print()
+
+			print('Buy value  ', buy_value)
+			print()
+			print('Total_profit ', total_profit)
+			print()
 
 		stack.append(current_price) 
 
 		if current_price <= previous_situation: # Increasing
-			print('H O D L')
+			print('N I K S')
 		else:
 			if current_price > minimum_price*DELTA:
 				print('curr ', current_price)
-				print('max_d', minimum_price*DELT)
-				print('max  ', minimum_price)
-
+				print('min_d', minimum_price*DELTA)
+				print('min  ', minimum_price)
+				print()
 				print('B U Y')
 				return current_price
 		print()
@@ -120,8 +136,8 @@ def main():
 	buy_price = Market_situation(ticker_df=ticker_df, hist_df=hist_df).last
 
 	while True:
-		sell_price = sell(initial_price=buy_price)
-		buy_price = buy(initial_price=sell_price)
+		sell_price = sell(initial_price=buy_price, print_trace=True)
+		buy_price = buy(initial_price=sell_price, print_trace=True)
 
 if __name__ == '__main__':
 	main()
