@@ -24,9 +24,10 @@ class Market_situation:
 
 
 FEE = 0.0025
-TRADE_VOL = 0.1
-DELTA = 1#0.96
-SLEEP = 0.5
+DELTA = 0.994
+SLEEP = 0.2
+
+trade_vol = 0.1
 total_profit = 0.
 
 
@@ -50,8 +51,8 @@ def sell(initial_price=0, print_trace=False):
 		if current_price >= maximum_price: # Set maximum
 			maximum_price = current_price
 
-		buy_value = buy_price*TRADE_VOL + buy_price*TRADE_VOL*FEE
-		sell_value = current_price*TRADE_VOL - current_price*TRADE_VOL*FEE
+		buy_value = buy_price*trade_vol + buy_price*trade_vol*FEE
+		sell_value = current_price*trade_vol - current_price*trade_vol*FEE
 		profit = sell_value - buy_value
 
 		if print_trace:
@@ -65,6 +66,7 @@ def sell(initial_price=0, print_trace=False):
 			print('Sell value   ', sell_value)
 			print('Profit       ', profit)
 			print()
+			print('Trade volume ', trade_vol)
 			print('Total_profit ', total_profit)
 			print()
 
@@ -74,15 +76,17 @@ def sell(initial_price=0, print_trace=False):
 			print('H O D L')
 
 		else:
-			if current_price < maximum_price*DELTA:
-				print('curr ', current_price)
-				print('max_d', maximum_price*DELTA)
-				print('max  ', maximum_price)
+			if current_price < maximum_price*DELTA:# and profit > 0:
+				print('curr       ', current_price)
+				print('max_d      ', maximum_price*DELTA)
+				print('max        ', maximum_price)
 				print()
-				print('S E L L')
+				print(' --- S E L L --- ')
 				global total_profit
 				total_profit += profit
 				return current_price
+			else:
+				print('Ooooh HODL')
 		print()
 
 def buy(initial_price=0, print_trace=False):
@@ -103,17 +107,20 @@ def buy(initial_price=0, print_trace=False):
 		if current_price <= minimum_price: # Set maximum
 			minimum_price = current_price
 
-		buy_value = current_price*TRADE_VOL - current_price*TRADE_VOL*FEE
+		new_trade_vol = trade_vol*initial_price / current_price
+
+		buy_value = current_price*new_trade_vol - current_price*new_trade_vol*FEE
 
 		if print_trace:
 			print('-------------------------')
-			print('Buy counter', i)
-			print('Previous   ', previous_situation)
-			print('Current    ', current_price)
+			print('Buy counter  ', i)
+			print('Previous     ', previous_situation)
+			print('Current      ', current_price)
 			print()
 
-			print('Buy value  ', buy_value)
+			print('Buy value    ', buy_value)
 			print()
+			print('Trade volume ', trade_vol)
 			print('Total_profit ', total_profit)
 			print()
 
@@ -123,12 +130,16 @@ def buy(initial_price=0, print_trace=False):
 			print('N I K S')
 		else:
 			if current_price > minimum_price*DELTA:
-				print('curr ', current_price)
-				print('min_d', minimum_price*DELTA)
-				print('min  ', minimum_price)
+				print('curr       ', current_price)
+				print('min_d      ', minimum_price*DELTA)
+				print('min        ', minimum_price)
 				print()
-				print('B U Y')
+				print(' --- B U Y --- ')
+				global trade_vol
+				trade_vol = new_trade_vol
 				return current_price
+			else:
+				print('Ooooh niks')
 		print()
 
 def main():
