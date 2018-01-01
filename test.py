@@ -52,16 +52,17 @@ class Wallet:
 				return coin
 
 BASE_CURRENCY = 'USDT'
-QUOTE_CURRENCY = 'STR'
+QUOTE_CURRENCY = 'BTC'
 FEE = 0.0025
 
-DELTA_SELL = 0.95
+DELTA_SELL = 0.964 #0.95
 DELTA_BUY = 2 - DELTA_SELL
 
 def trade(price, base_vol=None, base_currency=BASE_CURRENCY, quote_currency=QUOTE_CURRENCY):
 	base_coin = wallet.coin(base_currency)
+
 	if base_vol == None or base_vol > base_coin.volume:
-		base_vol = base_coin.volume
+		base_vol = base_coin.volume # Maximum amount in wallet
 
 	quote_vol = (base_vol / price) * (1-FEE)
 
@@ -85,17 +86,15 @@ def sell(init_price=0, print_trace=None):
 			if print_trace == 'all':
 				print('H O D L')
 		elif current_price < maximum_price*DELTA_SELL:
+			trade(price=1/current_price, base_vol=wallet.coin(QUOTE_CURRENCY).volume, base_currency=QUOTE_CURRENCY, quote_currency=BASE_CURRENCY)
 			if print_trace == 'action' or print_trace == 'all':
 				print('S E L L')
 				print(wallet)
 				print()
-			trade(price=1/current_price, base_vol=wallet.coin(QUOTE_CURRENCY).volume, base_currency=QUOTE_CURRENCY, quote_currency=BASE_CURRENCY)
 			return current_price
 		else:
 			if print_trace == 'all':
 				print('Oooooh hodl')
-
-
 
 def buy(init_price=0, print_trace=None):
 	stack = [init_price]
@@ -113,12 +112,14 @@ def buy(init_price=0, print_trace=None):
 		if current_price < previous_price:
 			if print_trace == 'all':
 				print('N I K S')
+
 		elif current_price > minimum_price*DELTA_BUY:
+			trade(price=current_price, base_vol=wallet.coin(BASE_CURRENCY).volume)
 			if print_trace == 'action' or print_trace == 'all':
-				print('BUY')
+				print('B U Y')
 				print(wallet)
 				print()
-			trade(price=current_price, base_vol=wallet.coin(BASE_CURRENCY).volume)
+			
 			return current_price
 		else:
 			if print_trace == 'all':
@@ -145,8 +146,8 @@ print(wallet)
 buy_price = init_price
 
 while len(hist_prices) > 0:
-	sell_price = sell(init_price=buy_price, print_trace='action')
-	buy_price = buy(init_price=sell_price, print_trace='action')
+	sell_price = sell(init_price=buy_price)
+	buy_price = buy(init_price=sell_price)
 
+print()
 print(wallet)
-
