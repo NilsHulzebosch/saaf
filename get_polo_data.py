@@ -4,7 +4,7 @@ import datetime
 import pandas as pd
 import pickle
 
-CURRENCY_PAIR = 'USDT_BTC'
+CURRENCY_PAIR = 'USDT_STR'
 
 START_DATE = '1388534400'	# unix timestamp for 2014.01.01
 CANDLESTICK_PERIOD = '300'	# candlestick period in seconds; valid values are 300, 900, 1800, 7200, 14400, and 86400
@@ -50,14 +50,8 @@ def ticker():
 	return df[CURRENCY_PAIR]
 
 def hist_ticker():
-	start_date = int(datetime_to_timestamp(str(datetime.datetime.now())[:19]))-400 # 5 minutes in advance #3600 # One hour before now
+	start_date = int(datetime_to_timestamp(str(datetime.datetime.now())[:19])) - 60*60*24*7*4
 	hist_df = historical_data(start_date=start_date)
 	ticker_df = ticker()
 
 	return hist_df, ticker_df
-
-def main():
-	hist_ticker()
-
-if __name__ == '__main__':
-	main()
