@@ -23,7 +23,6 @@ class Market_situation:
 	def __repr__(self):
 		return str(self.ticker_df)
 
-
 FEE = 0.0025
 DELTA = 0.9955 # The closer to one, the narrower the distance between current price and selling/buying price
 DELTA_BUY = 1.03
@@ -36,7 +35,7 @@ investment = 1000 # First currency of the pair
 
 def sell(initial_price=0, print_trace=False):
 
-	stack = [initial_price]
+	stack = [initial_price] # Store previous price
 
 	buy_price = initial_price
 	maximum_price = initial_price
@@ -49,7 +48,7 @@ def sell(initial_price=0, print_trace=False):
 		hist_df, ticker_df = hist_ticker()
 		current_price = Market_situation(ticker_df=ticker_df, hist_df=hist_df).last
 
-		previous_situation = stack.pop()
+		previous_price = stack.pop()
 
 		if current_price >= maximum_price: # Set maximum
 			maximum_price = current_price
@@ -65,7 +64,7 @@ def sell(initial_price=0, print_trace=False):
 			print()
 			print('Bought at         ', buy_price)
 			print()
-			print('Previous price    ', previous_situation)
+			print('Previous price    ', previous_price)
 			print('Current price     ', current_price)
 			print()
 			print('Buy value         ', buy_value)
@@ -81,7 +80,7 @@ def sell(initial_price=0, print_trace=False):
 
 		stack.append(current_price) 
 
-		if current_price >= previous_situation: # Increasing
+		if current_price >= previous_price: # Increasing
 			print('Going to sell at  ', maximum_price*DELTA)
 			print()
 			print('H O D L')
@@ -106,7 +105,7 @@ def sell(initial_price=0, print_trace=False):
 		print()
 
 def buy(initial_price=0, print_trace=False):
-	stack = [initial_price]
+	stack = [initial_price] # Store previous price
 
 	minimum_price = initial_price
 
@@ -118,7 +117,7 @@ def buy(initial_price=0, print_trace=False):
 		hist_df, ticker_df = hist_ticker()
 		current_price = Market_situation(ticker_df=ticker_df, hist_df=hist_df).last
 
-		previous_situation = stack.pop()
+		previous_price = stack.pop()
 
 		if current_price <= minimum_price: # Set minimum
 			minimum_price = current_price
@@ -132,7 +131,7 @@ def buy(initial_price=0, print_trace=False):
 			print('Buy counter       ', i)
 			print('Sold at 			 '. initial_price)
 			print()
-			print('Previous price    ', previous_situation)
+			print('Previous price    ', previous_price)
 			print('Current price     ', current_price)
 			print()
 			print('Buy value         ', buy_value)
@@ -145,7 +144,7 @@ def buy(initial_price=0, print_trace=False):
 
 		stack.append(current_price) 
 
-		if current_price <= previous_situation: # Increasing
+		if current_price <= previous_price: # Increasing
 			print('Going to buy at   ', minimum_price*DELTA_BUY)
 			print()
 			print('N I K S')
