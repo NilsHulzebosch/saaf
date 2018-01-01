@@ -1,5 +1,6 @@
 from get_polo_data import hist_ticker
 import time
+
 class Market_situation:
 
 	def __init__(self, ticker_df=None, hist_df=None):
@@ -24,14 +25,14 @@ class Market_situation:
 
 
 FEE = 0.0025
-DELTA = 0.995
-DELTA_BUY = 2 - DELTA
+DELTA = 0.9955 # The closer to one, the narrower the distance between current price and selling/buying price
+DELTA_BUY = 1.03
 SLEEP = 0.5
 
 total_profit = 0.
 total_volume_profit = 0.
 
-investment = 1000 # USDT
+investment = 1000 # First currency of the pair
 
 def sell(initial_price=0, print_trace=False):
 
@@ -61,6 +62,9 @@ def sell(initial_price=0, print_trace=False):
 		if print_trace:
 			print('-------------------------')
 			print('Sell counter      ', i)
+			print()
+			print('Bought at         ', buy_price)
+			print()
 			print('Previous price    ', previous_situation)
 			print('Current price     ', current_price)
 			print()
@@ -84,7 +88,7 @@ def sell(initial_price=0, print_trace=False):
 
 		else:
 			if current_price <= maximum_price*DELTA and profit > 0:
-				print('S O L D at  ', current_price)
+				print('S O L D at       ', current_price)
 				print()
 				print(' --- S O L D --- ')
 
@@ -119,19 +123,21 @@ def buy(initial_price=0, print_trace=False):
 		if current_price <= minimum_price: # Set minimum
 			minimum_price = current_price
 
-		new_trade_vol = trade_vol*initial_price / current_price
+		new_trade_vol = trade_vol*initial_price / current_price*(1 - FEE)
 
 		buy_value = current_price*new_trade_vol - current_price*new_trade_vol*FEE
 
 		if print_trace:
 			print('-------------------------')
 			print('Buy counter       ', i)
+			print('Sold at 			 '. initial_price)
+			print()
 			print('Previous price    ', previous_situation)
 			print('Current price     ', current_price)
 			print()
 			print('Buy value         ', buy_value)
 			print('Curr trade volume ', trade_vol)
-			print('New trade volume  ', new_trade_vol)			
+			print('New trade volume  ', new_trade_vol)
 			print()
 			print('Total profit      ', total_profit)
 			print('Total vol profit  ', total_volume_profit)
