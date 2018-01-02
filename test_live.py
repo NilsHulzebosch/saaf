@@ -66,10 +66,11 @@ def sell(init_price=0, print_trace=None):
 				base_profit(price=current_price, init_wallet=init_wallet, wallet=wallet))
 			print('Total quote profit                 ', 
 				quote_profit(price=current_price, init_wallet=init_wallet, wallet=wallet))
-			print(wallet)
+			print()
+			print('Wallet                             ', wallet)
 			print()
 
-		if current_price > previous_price:
+		if current_price >= previous_price:
 			if print_trace == 'all':
 				print('H O D L')
 
@@ -134,10 +135,11 @@ def buy(init_price=0, print_trace=None):
 				base_profit(price=current_price, init_wallet=init_wallet, wallet=wallet))
 			print('Total quote profit                  ', 
 				quote_profit(price=current_price, init_wallet=init_wallet, wallet=wallet))
-			print(wallet)
+			print()
+			print('Wallet                             ', wallet)
 			print()
 
-		if current_price < previous_price:
+		if current_price <= previous_price:
 			if print_trace == 'all':
 				print('N I K S')
 
