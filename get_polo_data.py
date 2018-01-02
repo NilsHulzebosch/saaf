@@ -50,7 +50,7 @@ def ticker():
 	return df[CURRENCY_PAIR]
 
 def hist_ticker():
-	start_date = int(datetime_to_timestamp(str(datetime.datetime.now())[:19])) - 60*60*24*7*4
+	start_date = int(datetime_to_timestamp(str(datetime.datetime.now())[:19])) - 60*60*24*7*16
 	hist_df = historical_data(start_date=start_date)
 	ticker_df = ticker()
 

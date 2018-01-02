@@ -1,55 +1,8 @@
 from get_polo_data import hist_ticker
+from coin import Coin
+from wallet import Wallet
 import time
 import copy
-
-class Market_situation:
-
-	def __init__(self, ticker_df=None, hist_df=None):
-
-		self.ticker_df = ticker_df
-		self.hist_df = hist_df
-
-		self.name = ticker_df.name
-		self.baseVolume = ticker_df['baseVolume']
-		self.high24hr = ticker_df['high24hr']
-		self.highestBid = ticker_df['highestBid']
-		self.id = ticker_df['id']
-		self.isFrozen = ticker_df['isFrozen']
-		self.last = ticker_df['last']
-		self.low24hr = ticker_df['low24hr']
-		self.lowestAsk = ticker_df['lowestAsk']
-		self.percentChange = ticker_df['percentChange']
-		self.quoteVolume = ticker_df['quoteVolume']
-
-	def __repr__(self):
-		return str(self.ticker_df)
-
-class Coin:
-
-	def __init__(self, name=None, volume=0):
-		self.name = name
-		self.volume = volume
-
-	def __repr__(self):
-		return self.name
-
-	__str__ = __repr__
-
-	def content(self):
-		return self.name + ': ' + str(self.volume)
-
-class Wallet:
-
-	def __init__(self, coins=[]):
-		self.coins = coins
-
-	def __repr__(self):
-		return str([x.content() for x in self.coins])
-
-	def coin(self, name=None):
-		for coin in self.coins:
-			if coin.name == name:
-				return coin
 
 BASE_CURRENCY = 'USDT'
 QUOTE_CURRENCY = 'STR'
