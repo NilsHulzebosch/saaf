@@ -74,8 +74,8 @@ class Tradebot:
 
 			if print_trace == 'all':	
 
-				base_volume = wallet.coin(QUOTE_CURRENCY).volume*init_price
-				est_base_vol = wallet.coin(QUOTE_CURRENCY).volume*(1-self.FEE)*maximum_price*self.DELTA_SELL
+				base_volume = self.wallet.coin(QUOTE_CURRENCY).volume*init_price
+				est_base_vol = self.wallet.coin(QUOTE_CURRENCY).volume*(1-self.FEE)*maximum_price*self.DELTA_SELL
 
 				print('-------------------------------------')
 				print('In sell loop, iteration            ', i)
@@ -106,7 +106,7 @@ class Tradebot:
 			elif current_price < maximum_price*self.DELTA_SELL:
 				self.trade(
 					price=1/current_price, 
-					base_vol=wallet.coin(self.QUOTE_CURRENCY).volume, 
+					base_vol=self.wallet.coin(self.QUOTE_CURRENCY).volume, 
 					base_currency=self.QUOTE_CURRENCY, 
 					quote_currency=self.BASE_CURRENCY
 					)
@@ -144,8 +144,8 @@ class Tradebot:
 
 			if print_trace == 'all':
 
-				quote_volume = wallet.coin(self.BASE_CURRENCY).volume/init_price
-				est_quote_vol = wallet.coin(self.BASE_CURRENCY).volume/((1-self.FEE)*minimum_price*self.DELTA_BUY)
+				quote_volume = self.wallet.coin(self.BASE_CURRENCY).volume/init_price
+				est_quote_vol = self.wallet.coin(self.BASE_CURRENCY).volume/((1-self.FEE)*minimum_price*self.DELTA_BUY)
 
 				print('-------------------------------------')
 				print('In buy loop, iteration             ', i)
@@ -237,14 +237,3 @@ class Tradebot:
 		while True: # Infinite trade loop
 			sell_price = self.sell(init_price=buy_price, print_trace='all')
 			buy_price = self.buy(init_price=sell_price, print_trace='all')
-
-if __name__ == "__main__":
-	
-	wallet = Wallet(coins=[
-		Coin(name='USDT', volume=0.), 
-		Coin(name='STR'	, volume=1082.), 
-		Coin(name='BTC' , volume=0.)
-		])
-
-	tradebot = Tradebot(wallet = wallet)
-	tradebot.trade_loop()
