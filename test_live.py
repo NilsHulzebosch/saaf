@@ -1,4 +1,4 @@
-from get_polo_data import hist_ticker
+from get_polo_data import ticker
 from coin import Coin
 from wallet import Wallet
 import time
@@ -37,7 +37,7 @@ def sell(init_price=0, print_trace=None):
 
 		previous_price = stack.pop(0)
 
-		_, ticker_df = hist_ticker()
+		ticker_df = ticker()
 		current_price = ticker_df['last']
 
 		stack.append(current_price)
@@ -105,7 +105,7 @@ def buy(init_price=0, print_trace=None):
 
 		previous_price = stack.pop(0)
 
-		_, ticker_df = hist_ticker()
+		ticker_df = ticker()
 		current_price = ticker_df['last']
 
 		stack.append(current_price)

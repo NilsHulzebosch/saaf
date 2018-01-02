@@ -42,7 +42,7 @@ def historical_data(start_date=START_DATE, end_date=None, to_pickle=False):
 def df_from_pickle(filename):
 	return pickle.load(open(DATA_DIR+'/'+filename, "rb"))
 
-def ticker():
+def ticker(currency_pair=CURRENCY_PAIR):
 	FETCH_URL = 'https://poloniex.com/public?command=returnTicker'
 
 	df = pd.read_json(FETCH_URL)
