@@ -158,13 +158,25 @@ def buy(init_price=0, print_trace=None):
 			if print_trace == 'all':
 				print('Oooooh niks')
 
-def base_profit(price=1, init_wallet=Wallet(), wallet=Wallet(), base_currency=BASE_CURRENCY, quote_currency=QUOTE_CURRENCY):
+def base_profit(
+	price=1, 
+	init_wallet=Wallet(), 
+	wallet=Wallet(), 
+	base_currency=BASE_CURRENCY, 
+	quote_currency=QUOTE_CURRENCY
+	):
 	return wallet.coin(BASE_CURRENCY).volume - \
 		init_wallet.coin(BASE_CURRENCY).volume + \
 		wallet.coin(QUOTE_CURRENCY).volume*price - \
 		init_wallet.coin(QUOTE_CURRENCY).volume*price
 
-def quote_profit(price=1, init_wallet=Wallet(), wallet=Wallet(), base_currency=BASE_CURRENCY, quote_currency=QUOTE_CURRENCY):
+def quote_profit(
+	price=1, 
+	init_wallet=Wallet(), 
+	wallet=Wallet(), 
+	base_currency=BASE_CURRENCY, 
+	quote_currency=QUOTE_CURRENCY
+	):
 	return wallet.coin(BASE_CURRENCY).volume/price - \
 		init_wallet.coin(BASE_CURRENCY).volume/price + \
 		wallet.coin(QUOTE_CURRENCY).volume - \
