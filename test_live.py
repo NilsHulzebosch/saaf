@@ -45,17 +45,19 @@ def sell(init_price=0, print_trace=None):
 			print('-------------------------------------')
 			print('In sell loop, iteration            ', i)
 			print('Previously bought at               ', init_price)
-			print('Current_price                      ', current_price)
+			print('Current price                      ', current_price)
 			print()
 			print('Maximum                            ', maximum_price)
 			print('Going to sell when below           ', maximum_price*DELTA_SELL)
 			print()
-			init_base_volume = wallet.coin(QUOTE_CURRENCY).volume*init_price
+			base_volume = wallet.coin(QUOTE_CURRENCY).volume*init_price
 			est_base_vol = wallet.coin(QUOTE_CURRENCY).volume*(1-FEE)*maximum_price*DELTA_SELL
-			print('Init base volume                   ', init_base_volume)
+			print('Init base volume                   ', base_volume)
 			print('Estimated base volume after trade  ', est_base_vol)
-			print('Estimated base profit              ', est_base_vol - init_base_volume)
+			print('Estimated base profit              ', est_base_vol - base_volume)
 			print()
+			print('Total base profit                  ', base_profit(price=current_price, init_wallet=init_wallet, wallet=wallet))
+			print('Total quote profit                 ', quote_profit(price=current_price, init_wallet=init_wallet, wallet=wallet))
 			print(wallet)
 			print()
 
@@ -94,17 +96,19 @@ def buy(init_price=0, print_trace=None):
 			print('-------------------------------------')
 			print('In buy loop, iteration              ', i)
 			print('Previously sold at                  ', init_price)
-			print('Current_price                       ', current_price)
+			print('Current price                       ', current_price)
 			print()
 			print('Minimum                             ', minimum_price)
 			print('Going to buy when above             ', minimum_price*DELTA_BUY)
 			print()
-			init_quote_volume = wallet.coin(BASE_CURRENCY).volume/init_price
+			quote_volume = wallet.coin(BASE_CURRENCY).volume/init_price
 			est_quote_vol = wallet.coin(BASE_CURRENCY).volume/((1-FEE)*minimum_price*DELTA_BUY)
-			print('Init quote volume                   ', init_quote_volume)
+			print('Init quote volume                   ', quote_volume)
 			print('Estimated quote volume after trade  ', est_quote_vol)
-			print('Estimated quote profit              ', est_quote_vol - init_quote_volume)
+			print('Estimated quote profit              ', est_quote_vol - quote_volume)
 			print()
+			print('Total base profit         ', base_profit(price=current_price, init_wallet=init_wallet, wallet=wallet))
+			print('Total quote profit        ', quote_profit(price=current_price, init_wallet=init_wallet, wallet=wallet))
 			print(wallet)
 			print()
 
@@ -124,24 +128,19 @@ def buy(init_price=0, print_trace=None):
 			if print_trace == 'all':
 				print('Oooooh niks')
 
+def base_profit(price=1, init_wallet=Wallet(), wallet=Wallet(), base_currency=BASE_CURRENCY, quote_currency=QUOTE_CURRENCY):
+	return (wallet.coin(BASE_CURRENCY).volume - init_wallet.coin(BASE_CURRENCY).volume) + (wallet.coin(QUOTE_CURRENCY).volume*price - init_wallet.coin(QUOTE_CURRENCY).volume*price)
+
+def quote_profit(price=1, init_wallet=Wallet(), wallet=Wallet(), base_currency=BASE_CURRENCY, quote_currency=QUOTE_CURRENCY):
+	return (wallet.coin(BASE_CURRENCY).volume/price - init_wallet.coin(BASE_CURRENCY).volume/price) + (wallet.coin(QUOTE_CURRENCY).volume - init_wallet.coin(QUOTE_CURRENCY).volume)
+
 wallet = Wallet(coins=[
 	Coin(name='USDT', volume=0.), 
 	Coin(name='STR'	, volume=1082.), 
 	Coin(name='BTC' , volume=0.)
 	])
 
-# hist_prices = []
-# hist_df, _ = hist_ticker()
-# for index, element in hist_df.iterrows():
-# 	hist_prices.append(element['weightedAverage'])
-
-
-hist_df, ticker_df = hist_ticker()
-init_price = ticker_df['last']
-
-init_base_volume = wallet.coin(BASE_CURRENCY).volume 
-
-print(wallet)
+init_wallet = copy.deepcopy(wallet) # Save initial situation
 
 buy_price = 0.13
 
