@@ -93,7 +93,7 @@ class Tradebot:
 				quote_profit = est_quote_vol - quote_volume
 
 				base_volume = quote_volume*init_price
-				est_base_vol = quote_volume*(1-self.FEE)*self.DELTA_SELL*maximum_price
+				est_base_vol = est_quote_vol*(1-self.FEE)*self.DELTA_SELL*maximum_price
 				base_profit = est_base_vol - base_volume
 
 				print('-----------------------------------')
@@ -174,7 +174,7 @@ class Tradebot:
 				base_profit = est_base_vol - base_volume
 
 				quote_volume = base_volume/init_price
-				est_quote_vol = base_volume/((1-self.FEE)*minimum_price*self.DELTA_BUY)
+				est_quote_vol = est_base_vol/((1-self.FEE)*minimum_price*self.DELTA_BUY)
 				quote_profit = est_quote_vol - quote_volume
 
 				print('-----------------------------------')
