@@ -1,4 +1,5 @@
 from get_polo_data import ticker
+from market_situation import Market_situation
 from coin import Coin
 from wallet import Wallet
 import time
@@ -77,7 +78,8 @@ class Tradebot:
 
 			previous_price = stack.pop(0)
 
-			current_price = ticker(self.currency_pair())['last']
+			market_situation = Market_situation(ticker(self.currency_pair()))
+			current_price = market_situation.last
 
 			stack.append(current_price)
 
@@ -149,7 +151,8 @@ class Tradebot:
 
 			previous_price = stack.pop(0)
 
-			current_price = ticker(self.currency_pair())['last']
+			market_situation = Market_situation(ticker(self.currency_pair()))
+			current_price = market_situation.last
 
 			stack.append(current_price)
 
