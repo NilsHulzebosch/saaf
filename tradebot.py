@@ -249,24 +249,24 @@ class Tradebot:
 			wallet.coin(quote_currency).volume - \
 			init_wallet.coin(quote_currency).volume
 
-	def trade_loop(self, init_buy_price=None, wallet=None, start_by_selling=True):
+	def trade_loop(self, init_price=None, wallet=None, start_by_selling=True):
 
-		if init_buy_price == None:
-			init_buy_price = ticker(self.currency_pair())['last']
+		if init_price == None:
+			init_price = ticker(self.currency_pair())['last']
 
 		if wallet == None:
 			wallet = self.wallet
 
 
 		if wallet.coin(self.QUOTE_CURRENCY).volume > 0 and start_by_selling: # begin by selling
-			buy_price = init_buy_price
+			buy_price = init_price
 
 			while True: # Infinite trade loop
 				sell_price = self.sell(init_price=buy_price, print_trace='all')
 				buy_price = self.buy(init_price=sell_price, print_trace='all')
 
 		elif wallet.coin(self.BASE_CURRENCY).volume > 0: # begin by buying
-			sell_price = init_buy_price
+			sell_price = init_price
 
 			while True: # Infinite trade loop
 				buy_price = self.buy(init_price=sell_price, print_trace='all')
