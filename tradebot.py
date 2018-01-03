@@ -170,7 +170,7 @@ class Tradebot:
 
 
 				base_volume = self.wallet.coin(self.BASE_CURRENCY).volume
-				est_base_vol = base_volume*(init_price/((1-self.FEE)*self.DELTA_SELL*maximum_price))
+				est_base_vol = base_volume*(init_price/((1-self.FEE)*self.DELTA_SELL*minimum_price))
 				base_profit = est_base_vol - base_volume
 
 				quote_volume = base_volume/init_price
