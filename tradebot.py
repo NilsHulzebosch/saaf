@@ -21,7 +21,7 @@ class Tradebot:
 		fee = FEE,
 		sleep = SLEEP,
 		delta_sell = DELTA_SELL,
-		delta_buy = DELTA_BUY,
+		delta_buy = None,
 		wallet=Wallet()
 		):
 
@@ -30,7 +30,10 @@ class Tradebot:
 		self.FEE = fee
 		self.SLEEP = sleep
 		self.DELTA_SELL = delta_sell
-		self.DELTA_BUY = delta_buy
+		if delta_buy == None:
+			self.DELTA_BUY = 2 - self.DELTA_SELL
+		else:
+			self.DELTA_BUY = delta_buy
 
 		self.wallet = wallet
 		self.init_wallet = copy.deepcopy(wallet) # Save initial situation
@@ -93,6 +96,8 @@ class Tradebot:
 				print()
 				print('Maximum                            ', maximum_price, self.BASE_CURRENCY)
 				print('Going to sell when below           ', maximum_price*self.DELTA_SELL, self.BASE_CURRENCY)
+				print('Delta sell                         ', self.DELTA_SELL)
+				print('Delta buy                          ', self.DELTA_BUY)
 				print()
 				print('Init base volume                   ', base_volume, self.BASE_CURRENCY)
 				print('Estimated base volume after trade  ', est_base_vol, self.BASE_CURRENCY)
@@ -163,6 +168,8 @@ class Tradebot:
 				print()
 				print('Minimum                            ', minimum_price, self.BASE_CURRENCY)
 				print('Going to buy when above            ', minimum_price*self.DELTA_BUY, self.BASE_CURRENCY)
+				print('Delta sell                         ', self.DELTA_SELL)
+				print('Delta buy                          ', self.DELTA_BUY)
 				print()
 				print('Init quote volume                  ', quote_volume, self.QUOTE_CURRENCY)
 				print('Estimated quote volume after trade ', est_quote_vol, self.QUOTE_CURRENCY)
@@ -266,7 +273,7 @@ class Tradebot:
 				buy_price = self.buy(init_price=sell_price, print_trace='all')
 
 		elif wallet.coin(self.BASE_CURRENCY).volume > 0: # begin by buying
-			sell_price = init_price
+			sell_price = init_buy_price
 
 			while True: # Infinite trade loop
 				buy_price = self.buy(init_price=sell_price, print_trace='all')
