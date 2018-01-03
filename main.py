@@ -10,5 +10,5 @@ if __name__ == "__main__":
 		Coin(name='BTC' , volume=0.)
 		])
 
-	tradebot = Tradebot(wallet = wallet)
+	tradebot = Tradebot(wallet = wallet, base_currency = 'USDT', quote_currency = 'STR')
 	tradebot.trade_loop()

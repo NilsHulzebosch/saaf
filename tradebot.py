@@ -35,12 +35,21 @@ class Tradebot:
 		self.wallet = wallet
 		self.init_wallet = copy.deepcopy(wallet) # Save initial situation
 
+	def currency_pair(self):
+		return self.BASE_CURRENCY + '_' + self.QUOTE_CURRENCY
+
 	def trade(self, 
 		price, 
 		base_vol=None, 
-		base_currency=BASE_CURRENCY, 
-		quote_currency=QUOTE_CURRENCY
+		base_currency=None, 
+		quote_currency=None
 		):
+
+		if base_currency == None:
+			base_currency = self.BASE_CURRENCY
+
+		if quote_currency == None:
+			quote_currency = self.QUOTE_CURRENCY
 
 		base_coin = self.wallet.coin(base_currency)
 
@@ -65,7 +74,7 @@ class Tradebot:
 
 			previous_price = stack.pop(0)
 
-			current_price = ticker()['last']
+			current_price = ticker(self.currency_pair())['last']
 
 			stack.append(current_price)
 
@@ -74,8 +83,8 @@ class Tradebot:
 
 			if print_trace == 'all':	
 
-				base_volume = self.wallet.coin(QUOTE_CURRENCY).volume*init_price
-				est_base_vol = self.wallet.coin(QUOTE_CURRENCY).volume*(1-self.FEE)*maximum_price*self.DELTA_SELL
+				base_volume = self.wallet.coin(self.QUOTE_CURRENCY).volume*init_price
+				est_base_vol = self.wallet.coin(self.QUOTE_CURRENCY).volume*(1-self.FEE)*self.DELTA_SELL*maximum_price
 
 				print('-------------------------------------')
 				print('In sell loop, iteration            ', i)
@@ -135,7 +144,7 @@ class Tradebot:
 
 			previous_price = stack.pop(0)
 
-			current_price = ticker()['last']
+			current_price = ticker(self.currency_pair())['last']
 
 			stack.append(current_price)
 
@@ -228,7 +237,11 @@ class Tradebot:
 			wallet.coin(quote_currency).volume - \
 			init_wallet.coin(quote_currency).volume
 
-	def trade_loop(self, init_buy_price=ticker()['last'], wallet=None):
+	def trade_loop(self, init_buy_price=None, wallet=None):
+
+		if init_buy_price == None:
+			init_buy_price = ticker(self.currency_pair())['last']
+
 		if wallet == None:
 			wallet = self.wallet
 
