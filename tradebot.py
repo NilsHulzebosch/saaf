@@ -90,6 +90,7 @@ class Tradebot:
 
 				base_volume = self.wallet.coin(self.QUOTE_CURRENCY).volume*init_price
 				est_base_vol = self.wallet.coin(self.QUOTE_CURRENCY).volume*(1-self.FEE)*self.DELTA_SELL*maximum_price
+				base_profit = est_base_vol - base_volume
 
 				print('-------------------------------------')
 				print('In sell loop, iteration            ', i)
@@ -103,11 +104,11 @@ class Tradebot:
 				print()
 				print('Init base volume                   ', base_volume, self.BASE_CURRENCY)
 				print('Estimated base volume after trade  ', est_base_vol, self.BASE_CURRENCY)
-				print('Estimated base profit              ', est_base_vol - base_volume, self.BASE_CURRENCY)
+				print('Estimated base profit              ', base_profit, self.BASE_CURRENCY)
 				print()
 				print('Init est quote volume              ', base_volume/current_price, self.QUOTE_CURRENCY)
 				print('Estimated quote volume after trade ', est_base_vol/current_price, self.QUOTE_CURRENCY)
-				print('Estimated quote profit             ', (est_base_vol - base_volume)/current_price, self.QUOTE_CURRENCY)
+				print('Estimated quote profit             ', base_profit/current_price, self.QUOTE_CURRENCY)
 				print()
 				print('Total base profit                  ', self.base_profit(price=current_price), self.BASE_CURRENCY)
 				print('Total quote profit                 ', self.quote_profit(price=current_price), self.QUOTE_CURRENCY)
@@ -119,7 +120,7 @@ class Tradebot:
 				if print_trace == 'all':
 					print('H O D L')
 
-			elif current_price < maximum_price*self.DELTA_SELL:
+			elif current_price < maximum_price*self.DELTA_SELL and base_profit > 0:
 				self.trade(
 					price=1/current_price, 
 					base_vol=self.wallet.coin(self.QUOTE_CURRENCY).volume, 
@@ -163,6 +164,7 @@ class Tradebot:
 
 				quote_volume = self.wallet.coin(self.BASE_CURRENCY).volume/init_price
 				est_quote_vol = self.wallet.coin(self.BASE_CURRENCY).volume/((1-self.FEE)*minimum_price*self.DELTA_BUY)
+				quote_profit = est_quote_vol - quote_volume
 
 				print('-------------------------------------')
 				print('In buy loop, iteration             ', i)
@@ -176,11 +178,11 @@ class Tradebot:
 				print()
 				print('Init quote volume                  ', quote_volume, self.QUOTE_CURRENCY)
 				print('Estimated quote volume after trade ', est_quote_vol, self.QUOTE_CURRENCY)
-				print('Estimated quote profit             ', est_quote_vol - quote_volume, self.QUOTE_CURRENCY)
+				print('Estimated quote profit             ', quote_profit, self.QUOTE_CURRENCY)
 				print()
 				print('Init est base volume               ', quote_volume*current_price, self.BASE_CURRENCY)
 				print('Estimated base volume after trade  ', est_quote_vol*current_price, self.BASE_CURRENCY)
-				print('Estimated base profit              ', (est_quote_vol - quote_volume)*current_price, self.BASE_CURRENCY)
+				print('Estimated base profit              ', quote_profit*current_price, self.BASE_CURRENCY)
 				print()
 				print('Total base profit                  ', self.base_profit(price=current_price), self.BASE_CURRENCY)
 				print('Total quote profit                 ', self.quote_profit(price=current_price), self.QUOTE_CURRENCY)
@@ -192,7 +194,7 @@ class Tradebot:
 				if print_trace == 'all':
 					print('N I K S')
 
-			elif current_price > minimum_price*self.DELTA_BUY:
+			elif current_price > minimum_price*self.DELTA_BUY and quote_profit > 0:
 				self.trade(
 					price=current_price, 
 					base_vol=self.wallet.coin(self.BASE_CURRENCY).volume
