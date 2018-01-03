@@ -203,9 +203,15 @@ class Tradebot:
 		price=1, 
 		init_wallet=None, 
 		wallet=None, 
-		base_currency=BASE_CURRENCY, 
-		quote_currency=QUOTE_CURRENCY
+		base_currency=None, 
+		quote_currency=None
 		):
+
+		if base_currency == None:
+			base_currency = self.BASE_CURRENCY
+
+		if quote_currency == None:
+			quote_currency = self.QUOTE_CURRENCY
 
 		if init_wallet == None:
 			init_wallet = self.init_wallet
@@ -222,9 +228,15 @@ class Tradebot:
 		price=1, 
 		init_wallet=None, 
 		wallet=None, 
-		base_currency=BASE_CURRENCY, 
-		quote_currency=QUOTE_CURRENCY
+		base_currency=None, 
+		quote_currency=None
 		):
+
+		if base_currency == None:
+			base_currency = self.BASE_CURRENCY
+
+		if quote_currency == None:
+			quote_currency = self.QUOTE_CURRENCY
 
 		if init_wallet == None:
 			init_wallet = self.init_wallet
@@ -237,7 +249,7 @@ class Tradebot:
 			wallet.coin(quote_currency).volume - \
 			init_wallet.coin(quote_currency).volume
 
-	def trade_loop(self, init_buy_price=None, wallet=None):
+	def trade_loop(self, init_buy_price=None, wallet=None, start_by_selling=True):
 
 		if init_buy_price == None:
 			init_buy_price = ticker(self.currency_pair())['last']
@@ -245,8 +257,20 @@ class Tradebot:
 		if wallet == None:
 			wallet = self.wallet
 
-		buy_price = init_buy_price
 
-		while True: # Infinite trade loop
-			sell_price = self.sell(init_price=buy_price, print_trace='all')
-			buy_price = self.buy(init_price=sell_price, print_trace='all')
+		if wallet.coin(self.QUOTE_CURRENCY).volume > 0 and start_by_selling: # begin by selling
+			buy_price = init_buy_price
+
+			while True: # Infinite trade loop
+				sell_price = self.sell(init_price=buy_price, print_trace='all')
+				buy_price = self.buy(init_price=sell_price, print_trace='all')
+
+		elif wallet.coin(self.BASE_CURRENCY).volume > 0: # begin by buying
+			sell_price = init_buy_price
+
+			while True: # Infinite trade loop
+				buy_price = self.buy(init_price=sell_price, print_trace='all')
+				sell_price = self.sell(init_price=buy_price, print_trace='all')
+
+		else:
+			print('Nothing to trade :(')
