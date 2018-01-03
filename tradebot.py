@@ -88,11 +88,15 @@ class Tradebot:
 
 			if print_trace == 'all':	
 
-				base_volume = self.wallet.coin(self.QUOTE_CURRENCY).volume*init_price
-				est_base_vol = self.wallet.coin(self.QUOTE_CURRENCY).volume*(1-self.FEE)*self.DELTA_SELL*maximum_price
+				quote_volume = self.wallet.coin(self.QUOTE_CURRENCY).volume
+				est_quote_vol = quote_volume*(1-self.FEE)*(self.DELTA_SELL*maximum_price/init_price)
+				quote_profit = est_quote_vol - quote_volume
+
+				base_volume = quote_volume*init_price
+				est_base_vol = quote_volume*(1-self.FEE)*self.DELTA_SELL*maximum_price
 				base_profit = est_base_vol - base_volume
 
-				print('-------------------------------------')
+				print('-----------------------------------')
 				print('In sell loop, iteration            ', i)
 				print('Previously bought at               ', init_price, self.BASE_CURRENCY)
 				print('Current price                      ', current_price, self.BASE_CURRENCY)
@@ -106,9 +110,9 @@ class Tradebot:
 				print('Estimated base volume after trade  ', est_base_vol, self.BASE_CURRENCY)
 				print('Estimated base profit              ', base_profit, self.BASE_CURRENCY)
 				print()
-				print('Init est quote volume              ', base_volume/current_price, self.QUOTE_CURRENCY)
-				print('Estimated quote volume after trade ', est_base_vol/current_price, self.QUOTE_CURRENCY)
-				print('Estimated quote profit             ', base_profit/current_price, self.QUOTE_CURRENCY)
+				print('Init est quote volume              ', quote_volume, self.QUOTE_CURRENCY)
+				print('Estimated quote volume after trade ', est_quote_vol, self.QUOTE_CURRENCY)
+				print('Estimated quote profit             ', quote_profit, self.QUOTE_CURRENCY)
 				print()
 				print('Total base profit                  ', self.base_profit(price=current_price), self.BASE_CURRENCY)
 				print('Total quote profit                 ', self.quote_profit(price=current_price), self.QUOTE_CURRENCY)
@@ -162,11 +166,18 @@ class Tradebot:
 
 			if print_trace == 'all':
 
-				quote_volume = self.wallet.coin(self.BASE_CURRENCY).volume/init_price
-				est_quote_vol = self.wallet.coin(self.BASE_CURRENCY).volume/((1-self.FEE)*minimum_price*self.DELTA_BUY)
+
+
+
+				base_volume = self.wallet.coin(self.BASE_CURRENCY).volume
+				est_base_vol = base_volume*(init_price/((1-self.FEE)*self.DELTA_SELL*maximum_price))
+				base_profit = est_base_vol - base_volume
+
+				quote_volume = base_volume/init_price
+				est_quote_vol = base_volume/((1-self.FEE)*minimum_price*self.DELTA_BUY)
 				quote_profit = est_quote_vol - quote_volume
 
-				print('-------------------------------------')
+				print('-----------------------------------')
 				print('In buy loop, iteration             ', i)
 				print('Previously sold at                 ', init_price, self.BASE_CURRENCY)
 				print('Current price                      ', current_price, self.BASE_CURRENCY)
@@ -176,13 +187,13 @@ class Tradebot:
 				print('Delta sell                         ', self.DELTA_SELL)
 				print('Delta buy                          ', self.DELTA_BUY)
 				print()
-				print('Init quote volume                  ', quote_volume, self.QUOTE_CURRENCY)
+				print('Init base volume                   ', base_volume, self.BASE_CURRENCY)
+				print('Estimated base volume after trade  ', est_base_vol, self.BASE_CURRENCY)
+				print('Estimated base profit              ', base_profit, self.BASE_CURRENCY)
+				print()
+				print('Init est quote volume              ', quote_volume, self.QUOTE_CURRENCY)
 				print('Estimated quote volume after trade ', est_quote_vol, self.QUOTE_CURRENCY)
 				print('Estimated quote profit             ', quote_profit, self.QUOTE_CURRENCY)
-				print()
-				print('Init est base volume               ', quote_volume*current_price, self.BASE_CURRENCY)
-				print('Estimated base volume after trade  ', est_quote_vol*current_price, self.BASE_CURRENCY)
-				print('Estimated base profit              ', quote_profit*current_price, self.BASE_CURRENCY)
 				print()
 				print('Total base profit                  ', self.base_profit(price=current_price), self.BASE_CURRENCY)
 				print('Total quote profit                 ', self.quote_profit(price=current_price), self.QUOTE_CURRENCY)
