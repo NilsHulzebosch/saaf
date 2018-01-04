@@ -1,6 +1,6 @@
 class Coin:
 
-	def __init__(self, name=None, volume=0):
+	def __init__(self, name = None, volume = 0):
 		self.name = name
 		self.volume = volume
 

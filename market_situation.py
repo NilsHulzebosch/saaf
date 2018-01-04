@@ -1,6 +1,6 @@
 class Market_situation:
 
-	def __init__(self, ticker_df=None, hist_df=None):
+	def __init__(self, ticker_df = None, hist_df = None):
 
 		self.ticker_df = ticker_df
 		self.hist_df = hist_df

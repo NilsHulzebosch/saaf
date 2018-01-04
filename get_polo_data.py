@@ -21,28 +21,28 @@ def datetime_to_timestamp(timestring): # Input string of the form '%Y-%m-%d %H:%
 		return time.mktime(datetime.datetime.strptime(timestring, '%Y-%m-%d %H:%M:%S').timetuple())
 
 DATA_DIR = 'data'
-FILE_NAME = 'data_'+CURRENCY_PAIR+'_start_'+str(timestamp_to_datetime(START_DATE))+\
-	'_period_'+CANDLESTICK_PERIOD+'_retrieved_'+str(datetime.datetime.now())
+FILE_NAME = 'data_' + CURRENCY_PAIR + '_start_' + str(timestamp_to_datetime(START_DATE)) + \
+	'_period_' + CANDLESTICK_PERIOD + '_retrieved_' + str(datetime.datetime.now())
 
-def historical_data(start_date=START_DATE, end_date=None, to_pickle=False):
+def historical_data(start_date = START_DATE, end_date = None, to_pickle = False):
 	if not os.path.exists(DATA_DIR):
 		os.mkdir(DATA_DIR)
 
 	# URL to get API data:
-	FETCH_URL = 'https://poloniex.com/public?command=returnChartData&currencyPair='+\
-		CURRENCY_PAIR+'&start='+str(start_date)+'&period='+CANDLESTICK_PERIOD
+	FETCH_URL = 'https://poloniex.com/public?command=returnChartData&currencyPair=' + \
+		CURRENCY_PAIR + '&start=' + str(start_date) + '&period=' + CANDLESTICK_PERIOD
 
 	df = pd.read_json(FETCH_URL)
 
 	if to_pickle == True:
-		df.to_pickle(path=DATA_DIR+'/'+FILE_NAME)
+		df.to_pickle(path = DATA_DIR + '/' + FILE_NAME)
 	
 	return df
 
 def df_from_pickle(filename):
-	return pickle.load(open(DATA_DIR+'/'+filename, "rb"))
+	return pickle.load(open(DATA_DIR + '/' + filename, "rb"))
 
-def ticker(currency_pair=CURRENCY_PAIR):
+def ticker(currency_pair = CURRENCY_PAIR):
 	FETCH_URL = 'https://poloniex.com/public?command=returnTicker'
 
 	try:
