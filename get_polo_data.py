@@ -45,9 +45,13 @@ def df_from_pickle(filename):
 def ticker(currency_pair=CURRENCY_PAIR):
 	FETCH_URL = 'https://poloniex.com/public?command=returnTicker'
 
-	df = pd.read_json(FETCH_URL)
+	try:
+		df = pd.read_json(FETCH_URL)
+		ticker = df[currency_pair]
+	except:
+		ticker = None
 
-	return df[currency_pair]
+	return ticker
 
 def hist_ticker():
 	start_date = int(datetime_to_timestamp(str(datetime.datetime.now())[:19])) - 60*60*24*7*16

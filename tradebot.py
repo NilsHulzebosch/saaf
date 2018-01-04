@@ -78,8 +78,12 @@ class Tradebot:
 
 			previous_price = stack.pop(0)
 
-			market_situation = Market_situation(ticker(self.currency_pair()))
-			current_price = market_situation.last
+			tick = ticker(self.currency_pair())
+			if tick is not None:
+				market_situation = Market_situation(tick)
+				current_price = market_situation.last
+			else:
+				current_price = previous_price
 
 			stack.append(current_price)
 
@@ -156,8 +160,12 @@ class Tradebot:
 
 			previous_price = stack.pop(0)
 
-			market_situation = Market_situation(ticker(self.currency_pair()))
-			current_price = market_situation.last
+			tick = ticker(self.currency_pair())
+			if tick is not None:
+				market_situation = Market_situation(ticker)
+				current_price = market_situation.last
+			else:
+				current_price = previous_price
 
 			stack.append(current_price)
 

@@ -14,6 +14,6 @@ if __name__ == "__main__":
 		wallet = wallet, 
 		base_currency = 'USDT', 
 		quote_currency = 'STR', 
-		delta_sell = 0.995
+		delta_sell = 0.99
 		)
 	tradebot.trade_loop()
