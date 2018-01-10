@@ -5,7 +5,11 @@ class Market_situation:
 		self.ticker_df = ticker_df
 		self.hist_df = hist_df
 
-		self.name = ticker_df.name
+		if hasattr(ticker_df, 'name'):
+			self.name = ticker_df.name
+		else:
+			self.name = None
+
 		self.baseVolume = ticker_df['baseVolume']
 		self.high24hr = ticker_df['high24hr']
 		self.highestBid = ticker_df['highestBid']
