@@ -5,7 +5,6 @@ class Market_situation:
 		self.ticker_df = ticker_df
 		self.hist_df = hist_df
 
-		print(ticker_df)
 		if ticker_df is not None:
 			self.name = ticker_df.name
 
