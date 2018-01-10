@@ -162,7 +162,7 @@ class Tradebot:
 
 			tick = ticker(self.currency_pair())
 			if tick is not None:
-				market_situation = Market_situation(ticker)
+				market_situation = Market_situation(tick)
 				current_price = market_situation.last
 			else:
 				current_price = previous_price
