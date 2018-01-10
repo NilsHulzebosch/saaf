@@ -16,4 +16,5 @@ if __name__ == "__main__":
 		quote_currency = 'STR', 
 		delta_sell = 0.99
 		)
+	
 	tradebot.trade_loop()

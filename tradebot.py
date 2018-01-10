@@ -90,14 +90,14 @@ class Tradebot:
 			if current_price > maximum_price:
 				maximum_price = current_price
 
-			if print_trace == 'all':	
+			if print_trace == 'all':
 
 				quote_volume = self.wallet.coin(self.QUOTE_CURRENCY).volume
-				est_quote_vol = quote_volume*(1-self.FEE)*(self.DELTA_SELL*maximum_price/init_price)
+				est_quote_vol = quote_volume*(1-self.FEE)*(init_price/(self.DELTA_SELL*maximum_price))
 				quote_profit = est_quote_vol - quote_volume
 
 				base_volume = quote_volume*init_price
-				est_base_vol = est_quote_vol*(1-self.FEE)*self.DELTA_SELL*maximum_price
+				est_base_vol = est_quote_vol*self.DELTA_SELL*maximum_price
 				base_profit = est_base_vol - base_volume
 
 				print('-----------------------------------')
@@ -182,7 +182,7 @@ class Tradebot:
 				base_profit = est_base_vol - base_volume
 
 				quote_volume = base_volume/init_price
-				est_quote_vol = est_base_vol/((1-self.FEE)*minimum_price*self.DELTA_BUY)
+				est_quote_vol = est_base_vol/(minimum_price*self.DELTA_BUY)
 				quote_profit = est_quote_vol - quote_volume
 
 				print('-----------------------------------')
