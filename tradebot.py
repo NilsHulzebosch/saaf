@@ -128,7 +128,7 @@ class Tradebot:
 				if print_trace == 'all':
 					print('H O D L')
 
-			elif current_price < maximum_price*self.DELTA_SELL and base_profit > 0:
+			elif current_price < maximum_price*self.DELTA_SELL:
 				self.trade(
 					price=1/current_price, 
 					base_vol=self.wallet.coin(self.QUOTE_CURRENCY).volume, 
@@ -213,7 +213,7 @@ class Tradebot:
 				if print_trace == 'all':
 					print('N I K S')
 
-			elif current_price > minimum_price*self.DELTA_BUY and quote_profit > 0:
+			elif current_price > minimum_price*self.DELTA_BUY:
 				self.trade(
 					price=current_price, 
 					base_vol=self.wallet.coin(self.BASE_CURRENCY).volume
